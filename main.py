@@ -102,6 +102,20 @@ async def get_protected_redoc(username: str = Depends(check_admin_auth)):
         title=app.title + " - Admin ReDoc Documentation",
     )
 
+# ─── VERCEL REWRITE MIDDLEWARE ────────────────────────────────────────────────
+@app.middleware("http")
+async def fix_vercel_path_middleware(request: Request, call_next):
+    path = request.scope.get("path", "")
+    for prefix in ["/api/index.py", "/api/index"]:
+        if path.startswith(prefix):
+            new_path = path[len(prefix):]
+            if not new_path:
+                new_path = "/"
+            request.scope["path"] = new_path
+            break
+    response = await call_next(request)
+    return response
+
 # ─── SECURITY MIDDLEWARE ──────────────────────────────────────────────────────
 from middleware.security import add_security_headers
 app.middleware("http")(add_security_headers)
