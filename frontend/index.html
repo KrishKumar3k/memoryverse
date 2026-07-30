@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MemoryVerse Portfolio — Executive Knowledge System</title>
+  <meta name="description" content="Enterprise digital identity and document intelligence platform for managing professional assets, academic credentials, and project portfolios." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     AUTH SCREEN
+════════════════════════════════════════════════════════════ -->
+<div id="auth-screen" class="auth-screen">
+  <div class="auth-card">
+    <div class="brand">
+      <h1 class="brand-name">MemoryVerse <span class="accent">Portfolio</span></h1>
+      <p class="brand-tagline">Executive Digital Identity & Asset Intelligence</p>
+    </div>
+
+    <!-- Tab switcher -->
+    <div class="auth-tabs">
+      <button id="tab-login" class="auth-tab active" onclick="switchAuthTab('login')">Sign In</button>
+      <button id="tab-register" class="auth-tab" onclick="switchAuthTab('register')">Register Account</button>
+    </div>
+
+    <!-- Login Form -->
+    <form id="login-form" class="auth-form" onsubmit="handleLogin(event)">
+      <div class="field-group">
+        <label>Corporate Email</label>
+        <input id="login-email" type="email" placeholder="user@company.com" required autocomplete="email" />
+      </div>
+      <div class="field-group">
+        <label>Password</label>
+        <input id="login-password" type="password" placeholder="••••••••" required autocomplete="current-password" />
+      </div>
+      <button type="submit" class="btn-primary btn-full" id="login-btn">
+        <span class="btn-text">Sign In</span>
+      </button>
+      <p id="login-error" class="form-error hidden"></p>
+    </form>
+
+    <!-- Register Form -->
+    <form id="register-form" class="auth-form hidden" onsubmit="handleRegister(event)">
+      <div class="field-group">
+        <label>Full Name</label>
+        <input id="reg-name" type="text" placeholder="John Doe" required />
+      </div>
+      <div class="field-group">
+        <label>Email Address</label>
+        <input id="reg-email" type="email" placeholder="user@company.com" required autocomplete="email" />
+      </div>
+      <div class="field-group">
+        <label>Password <small>(min 8 chars)</small></label>
+        <input id="reg-password" type="password" placeholder="••••••••" required minlength="8" autocomplete="new-password" />
+      </div>
+      <button type="submit" class="btn-primary btn-full" id="register-btn">
+        <span class="btn-text">Create Account</span>
+      </button>
+      <p id="register-error" class="form-error hidden"></p>
+    </form>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MAIN APP
+════════════════════════════════════════════════════════════ -->
+<div id="app" class="app hidden">
+
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <span class="brand-name">MemoryVerse</span>
+      </div>
+      <button id="theme-toggle-btn" class="btn-theme-toggle" onclick="toggleTheme()" title="Switch Light/Dark theme">
+        <svg class="theme-icon-sun hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-view="dashboard" onclick="switchView('dashboard')">
+        <svg class="nav-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+        Dashboard
+      </button>
+      <button class="nav-item" data-view="upload" onclick="switchView('upload')">
+        <svg class="nav-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 12 15 15"/></svg>
+        Document Ingestion
+      </button>
+      <button class="nav-item" data-view="timeline" onclick="switchView('timeline')">
+        <svg class="nav-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Career Timeline
+      </button>
+      <button class="nav-item" data-view="graph" onclick="switchView('graph')">
+        <svg class="nav-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Knowledge Network
+      </button>
+      <button class="nav-item" data-view="search" onclick="switchView('search')">
+        <svg class="nav-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Intelligent Search
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="user-avatar">U</div>
+        <div>
+          <p class="user-name" id="user-name">Loading...</p>
+          <p class="user-email" id="user-email"></p>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="logout()" title="Sign out">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content View -->
+  <main class="main-content">
+
+    <!-- ── DASHBOARD ── -->
+    <section id="view-dashboard" class="view active">
+      <div class="view-header">
+        <h2>Executive Portfolio Dashboard</h2>
+        <p class="view-subtitle">Centralized view of verified document assets, skills, and categories.</p>
+      </div>
+      <div id="stats-bar" class="stats-bar"></div>
+      <div id="category-grid" class="category-grid"></div>
+      <div class="section-header">
+        <h3>Document Repository</h3>
+        <button class="btn-primary btn-sm" onclick="reprocessAllDocs()" style="margin-left: auto;">Refine Metadata</button>
+      </div>
+      <div id="recent-docs" class="doc-list"></div>
+    </section>
+
+    <!-- ── UPLOAD ── -->
+    <section id="view-upload" class="view">
+      <div class="view-header">
+        <h2>Document Ingestion</h2>
+        <p class="view-subtitle">Upload official certificates, CVs, project records, and academic credentials for automated metadata indexing.</p>
+      </div>
+
+      <!-- Drop Zone -->
+      <div id="drop-zone" class="drop-zone"
+           ondragenter="handleDragEnter(event)"
+           ondragover="handleDragOver(event)"
+           ondrop="handleDrop(event)"
+           ondragleave="handleDragLeave(event)">
+        <div class="drop-zone-inner">
+          <p class="drop-title">Drag and drop document files here</p>
+          <p class="drop-sub">Select files from your workstation for indexing</p>
+          <div class="accepted-types">
+            <span class="type-badge">PDF</span>
+            <span class="type-badge">DOCX</span>
+            <span class="type-badge">TXT</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Manual Browse Button -->
+      <div class="upload-actions">
+        <input type="file" id="file-input" accept=".pdf,.docx,.txt" multiple style="display:none" onchange="handleFileSelect(event)" />
+        <button class="btn-browse" onclick="document.getElementById('file-input').click()">
+          Select Files to Upload
+        </button>
+        <p class="upload-hint">Supports PDF, DOCX, TXT · Maximum 10 MB per file · Batch processing supported</p>
+      </div>
+
+      <!-- Upload Queue -->
+      <div id="upload-queue" class="upload-queue"></div>
+    </section>
+
+    <!-- ── TIMELINE ── -->
+    <section id="view-timeline" class="view">
+      <div class="view-header">
+        <h2>Career & Academic Timeline</h2>
+        <p class="view-subtitle">Chronological record of verified achievements, credentials, and experience.</p>
+      </div>
+      <div id="timeline-container" class="timeline-container"></div>
+    </section>
+
+    <!-- ── KNOWLEDGE GRAPH ── -->
+    <section id="view-graph" class="view">
+      <div class="view-header">
+        <h2>Knowledge Network</h2>
+        <p class="view-subtitle">Interconnected mapping of technical skills, organization links, and project assets.</p>
+        <div style="display:flex; gap:10px; margin-top:8px;">
+          <button class="btn-primary btn-sm" onclick="openManualConnectionModal()">➕ Add Custom Connection</button>
+          <button class="btn-secondary btn-sm" onclick="openManageConnectionsModal()">⚙️ Manage Connections</button>
+          <button class="btn-secondary btn-sm" onclick="rebuildGraph()">🔄 Rebuild Auto Connections</button>
+        </div>
+      </div>
+      <div class="graph-legend" id="graph-legend"></div>
+      <canvas id="graph-canvas" class="graph-canvas"></canvas>
+      <div id="graph-tooltip" class="graph-tooltip hidden"></div>
+      <p id="graph-empty" class="empty-state hidden">Upload at least 2 documents to visualize knowledge connections.</p>
+    </section>
+
+    <!-- Manual Connection Modal -->
+    <div id="connection-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Add Custom Knowledge Connection</h3>
+          <button class="btn-close" onclick="closeManualConnectionModal()">×</button>
+        </div>
+        <form id="connection-form" class="auth-form" onsubmit="handleCreateConnection(event)">
+          <div class="field-group">
+            <label>Source Document</label>
+            <select id="conn-source" required class="select-input"></select>
+          </div>
+          <div class="field-group">
+            <label>Target Document</label>
+            <select id="conn-target" required class="select-input"></select>
+          </div>
+          <div class="field-group">
+            <label>Relationship Type</label>
+            <input id="conn-type" type="text" placeholder="e.g., Skill → Project, Prerequisite, Reference" required class="text-input" />
+          </div>
+          <div class="field-group">
+            <label>Description (Optional)</label>
+            <input id="conn-desc" type="text" placeholder="Brief note explaining the connection..." class="text-input" />
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" onclick="closeManualConnectionModal()">Cancel</button>
+            <button type="submit" class="btn-primary">Connect Documents</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Manage Connections Modal -->
+    <div id="manage-connections-modal" class="modal-overlay hidden">
+      <div class="modal-card" style="max-width:540px;">
+        <div class="modal-header">
+          <h3>Manage Network Connections</h3>
+          <button class="btn-close" onclick="closeManageConnectionsModal()">×</button>
+        </div>
+        <div id="connection-list-container" style="max-height:360px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; padding:4px;"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeManageConnectionsModal()">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SMART SEARCH ── -->
+    <section id="view-search" class="view">
+      <div class="view-header">
+        <h2>Intelligent Search & Assistant</h2>
+        <p class="view-subtitle">Perform natural language retrieval across indexed portfolio documents.</p>
+      </div>
+      <div class="chat-container">
+        <div id="chat-messages" class="chat-messages">
+          <div class="chat-welcome">
+            <h3>Portfolio Intelligence Assistant</h3>
+            <p>Query your document assets or search by technical skills and project details.</p>
+            <div class="quick-queries">
+              <button class="quick-btn" onclick="sendQuickQuery('Show all my certificates')">Certificates</button>
+              <button class="quick-btn" onclick="sendQuickQuery('Show all my projects')">Projects</button>
+              <button class="quick-btn" onclick="sendQuickQuery('What skills do I have?')">Skill Summary</button>
+              <button class="quick-btn" onclick="sendQuickQuery('Show my internship documents')">Work History</button>
+            </div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <input id="chat-input" type="text" placeholder="Enter query (e.g., 'What Python and ML projects are indexed?')..." maxlength="500"
+                 onkeydown="if(event.key==='Enter') sendChat()" />
+          <button class="btn-send" onclick="sendChat()" id="send-btn">➤</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="app-footer">
+      <p>© MemoryVerse Portfolio ™ by KK · All rights reserved.</p>
+    </footer>
+  </main>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
