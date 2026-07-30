@@ -167,8 +167,25 @@ app.include_router(graph_router)
 
 # ─── SERVE FRONTEND ───────────────────────────────────────────────────────────
 frontend_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "frontend")
+
+
+@app.get("/", include_in_schema=False)
+def serve_index():
+    return FileResponse(os.path.join(frontend_dir, "index.html"), media_type="text/html")
+
+
+@app.get("/style.css", include_in_schema=False)
+def serve_css():
+    return FileResponse(os.path.join(frontend_dir, "style.css"), media_type="text/css")
+
+
+@app.get("/app.js", include_in_schema=False)
+def serve_js():
+    return FileResponse(os.path.join(frontend_dir, "app.js"), media_type="application/javascript")
+
+
 if os.path.exists(frontend_dir):
-    app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
+    app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
 
 
 if __name__ == "__main__":
