@@ -41,6 +41,7 @@ class Document(Base):
     doc_date = Column(String(50), nullable=True)            # extracted date (YYYY or YYYY-MM)
     organization = Column(String(500), nullable=True)
     extracted_text = Column(Text, nullable=True)            # raw extracted text
+    embedding = Column(JSON, nullable=True)                 # vector embedding floats list
 
     # Processing status
     status = Column(String(50), default="processing")       # processing | ready | failed

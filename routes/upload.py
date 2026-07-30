@@ -111,7 +111,7 @@ async def upload_document(
         meta = categorize_document(text, filename=file.filename or stored_filename)
 
         # ── 6. EMBED + STORE IN VECTOR DB ────────────────────────────────────
-        add_document(
+        vector = add_document(
             user_id=current_user.id,
             doc_id=doc.id,
             text=text,
@@ -120,6 +120,7 @@ async def upload_document(
 
         # ── 7. UPDATE DB RECORD ───────────────────────────────────────────────
         doc.extracted_text = text[:5000]  # Store first 5k chars
+        doc.embedding = vector
         doc.category = meta["category"]
         doc.title = meta["title"]
         doc.summary = meta["summary"]

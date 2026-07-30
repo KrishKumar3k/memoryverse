@@ -29,13 +29,21 @@ def extract_text(file_path: str) -> str:
 
 
 def _extract_pdf(file_path: str) -> str:
-    import fitz  # PyMuPDF
-    doc = fitz.open(file_path)
-    text_parts = []
-    for page in doc:
-        text_parts.append(page.get_text())
-    doc.close()
-    return "\n".join(text_parts).strip()
+    try:
+        from pypdf import PdfReader
+        reader = PdfReader(file_path)
+        text_parts = [page.extract_text() or "" for page in reader.pages]
+        return "\n".join(text_parts).strip()
+    except Exception:
+        try:
+            import fitz  # PyMuPDF fallback
+            doc = fitz.open(file_path)
+            text_parts = [page.get_text() for page in doc]
+            doc.close()
+            return "\n".join(text_parts).strip()
+        except Exception as e:
+            print(f"[Extractor] PDF extraction error: {e}")
+            return ""
 
 
 def _extract_docx(file_path: str) -> str:
