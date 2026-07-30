@@ -176,3 +176,7 @@ def delete_document(user_id: int, doc_id: int):
             coll.delete(ids=[str(doc_id)])
         except Exception:
             pass
+
+
+# Alias for backward compatibility
+search_documents = query_documents
