@@ -5,7 +5,7 @@ to answer natural language queries about user documents.
 import os
 from typing import List, Dict
 import google.generativeai as genai
-from services.embedder import search_documents
+from services.embedder import query_documents
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
@@ -48,7 +48,7 @@ def rag_answer(user_id: int, query: str, chat_history: List[Dict] = None) -> Dic
     2. Build context from top results
     3. Gemini synthesizes a natural language answer
     """
-    results = search_documents(user_id=user_id, query=query, n_results=5)
+    results = query_documents(user_id=user_id, query_text=query, top_k=5)
 
     if not results:
         return {
@@ -60,7 +60,7 @@ def rag_answer(user_id: int, query: str, chat_history: List[Dict] = None) -> Dic
     sources = []
     for r in results:
         meta = r["metadata"]
-        snippet = r["text_snippet"]
+        snippet = r.get("text_snippet") or meta.get("title", "")
         context_parts.append(
             f"[{meta.get('category', 'Document')}] \"{meta.get('title', 'Untitled')}\"\n{snippet}"
         )
