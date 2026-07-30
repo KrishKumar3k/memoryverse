@@ -21,9 +21,11 @@ Format your answer in plain readable text."""
 
 
 def _generate_with_fallback(prompt: str) -> str:
-    api_key = os.getenv("GEMINI_API_KEY")
+    api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
     if not api_key:
         raise ValueError("GEMINI_API_KEY environment variable is not configured in Vercel settings.")
+    os.environ["GOOGLE_API_KEY"] = api_key
+    os.environ["GEMINI_API_KEY"] = api_key
     genai.configure(api_key=api_key)
 
     last_err = None
