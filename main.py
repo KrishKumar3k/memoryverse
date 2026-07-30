@@ -20,8 +20,18 @@ from database.db import create_tables
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    create_tables()
-    os.makedirs(os.getenv("UPLOAD_DIR", "uploads"), exist_ok=True)
+    try:
+        create_tables()
+    except Exception as e:
+        print(f"[Lifespan Error] create_tables failed: {e}")
+
+    default_upload_dir = "/tmp/uploads" if os.getenv("VERCEL") else "uploads"
+    upload_dir = os.getenv("UPLOAD_DIR", default_upload_dir)
+    try:
+        os.makedirs(upload_dir, exist_ok=True)
+    except Exception as e:
+        print(f"[Lifespan Error] mkdir upload_dir failed: {e}")
+
     yield
 
 
@@ -156,13 +166,9 @@ app.include_router(timeline_router)
 app.include_router(graph_router)
 
 # ─── SERVE FRONTEND ───────────────────────────────────────────────────────────
-frontend_dir = os.path.join(os.path.dirname(__file__), "frontend")
+frontend_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "frontend")
 if os.path.exists(frontend_dir):
-    app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
-
-    @app.get("/", include_in_schema=False)
-    def serve_frontend():
-        return FileResponse(os.path.join(frontend_dir, "index.html"))
+    app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="frontend")
 
 
 if __name__ == "__main__":
