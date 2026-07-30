@@ -45,8 +45,8 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 security_basic = HTTPBasic(auto_error=False)
-ADMIN_DOCS_USER = os.getenv("ADMIN_DOCS_USER", "krish")
-ADMIN_DOCS_PASS = os.getenv("ADMIN_DOCS_PASS", "9199271709")
+ADMIN_DOCS_USER = os.getenv("ADMIN_DOCS_USER", "admin")
+ADMIN_DOCS_PASS = os.getenv("ADMIN_DOCS_PASS", "change_me_in_env")
 
 
 def check_admin_auth(credentials: Optional[HTTPBasicCredentials] = Depends(security_basic)):
