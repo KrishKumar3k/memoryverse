@@ -17,11 +17,8 @@ except ImportError:
     HAS_CHROMADB = False
 
 # ─── CLIENTS ──────────────────────────────────────────────────────────────────
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-_chroma_client = None
-
 EMBED_MODELS = [
-    "models/gemini-embedding-001",
+    "models/text-embedding-004",
     "models/embedding-001",
 ]
 default_chroma_dir = "/tmp/chroma_db" if os.getenv("VERCEL") else "./chroma_db"
@@ -73,6 +70,11 @@ def cosine_similarity(vec_a: List[float], vec_b: List[float]) -> float:
 # ─── PUBLIC API ───────────────────────────────────────────────────────────────
 def embed_text(text: str, task_type: str = "retrieval_document") -> List[float]:
     """Generate a Gemini embedding vector for the given text."""
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        raise ValueError("GEMINI_API_KEY environment variable is not set on Vercel/server.")
+    genai.configure(api_key=api_key)
+
     text = text[:8000]
     last_err = None
     for model_name in EMBED_MODELS:

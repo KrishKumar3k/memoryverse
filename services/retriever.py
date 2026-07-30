@@ -9,7 +9,7 @@ from services.embedder import query_documents
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-CANDIDATE_MODELS = ["gemini-flash-latest", "gemini-3.6-flash", "gemini-2.0-flash"]
+CANDIDATE_MODELS = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"]
 
 SYSTEM_PROMPT = """You are MemoryVerse AI, an intelligent personal assistant helping a student
 find and understand their own academic and professional documents.
@@ -21,6 +21,11 @@ Format your answer in plain readable text."""
 
 
 def _generate_with_fallback(prompt: str) -> str:
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        raise ValueError("GEMINI_API_KEY environment variable is not configured in Vercel settings.")
+    genai.configure(api_key=api_key)
+
     last_err = None
     for m in CANDIDATE_MODELS:
         try:
