@@ -18,7 +18,9 @@ except ImportError:
 
 # ─── CLIENTS ──────────────────────────────────────────────────────────────────
 EMBED_MODELS = [
-    "models/text-embedding-004",
+    "models/gemini-embedding-001",
+    "models/gemini-embedding-2",
+    "models/gemini-embedding-2-preview",
 ]
 default_chroma_dir = "/tmp/chroma_db" if os.getenv("VERCEL") else "./chroma_db"
 CHROMA_DIR = os.getenv("CHROMA_DIR", default_chroma_dir)
