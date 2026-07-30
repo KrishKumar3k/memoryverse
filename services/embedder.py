@@ -155,6 +155,7 @@ def query_documents(user_id: int, query_text: str, top_k: int = 5) -> List[Dict[
                 scored.append({
                     "doc_id": d.id,
                     "score": round(sim, 4),
+                    "text_snippet": (d.extracted_text or "")[:500],
                     "metadata": {
                         "category": d.category or "Other",
                         "title": d.title or d.original_filename,
@@ -178,5 +179,17 @@ def delete_document(user_id: int, doc_id: int):
             pass
 
 
-# Alias for backward compatibility
-search_documents = query_documents
+def search_documents(user_id: int, query: str = None, query_text: str = None, n_results: int = 5, top_k: int = 5) -> List[Dict[str, Any]]:
+    """
+    Alias for query_documents — accepts both 'query' and 'query_text' kwargs,
+    and both 'n_results' and 'top_k' for the result limit.
+    Adds 'text_snippet' field to each result for the RAG retriever.
+    """
+    text = query or query_text or ""
+    k = n_results or top_k or 5
+    hits = query_documents(user_id=user_id, query_text=text, top_k=k)
+    # Add text_snippet field expected by retriever.py
+    for h in hits:
+        h.setdefault("text_snippet", h["metadata"].get("title", ""))
+    return hits
+
