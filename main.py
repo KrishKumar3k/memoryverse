@@ -121,14 +121,17 @@ from middleware.security import add_security_headers
 app.middleware("http")(add_security_headers)
 
 # ─── CORS ─────────────────────────────────────────────────────────────────────
-allowed_origins_raw = os.getenv("ALLOWED_ORIGINS", "http://localhost:8000,http://127.0.0.1:8000")
-allowed_origins = [o.strip() for o in allowed_origins_raw.split(",")]
+allowed_origins_raw = os.getenv("ALLOWED_ORIGINS", "*")
+if allowed_origins_raw.strip() == "*":
+    allowed_origins = ["*"]
+else:
+    allowed_origins = [o.strip() for o in allowed_origins_raw.split(",")]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "DELETE"],
+    allow_credentials=allowed_origins != ["*"],
+    allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
     allow_headers=["Authorization", "Content-Type"],
 )
 
@@ -184,22 +187,21 @@ frontend_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fronten
 
 
 @app.get("/", include_in_schema=False)
+@app.get("/index.html", include_in_schema=False)
 def serve_index():
     return FileResponse(os.path.join(frontend_dir, "index.html"), media_type="text/html")
 
 
 @app.get("/style.css", include_in_schema=False)
+@app.get("/static/style.css", include_in_schema=False)
 def serve_css():
     return FileResponse(os.path.join(frontend_dir, "style.css"), media_type="text/css")
 
 
 @app.get("/app.js", include_in_schema=False)
+@app.get("/static/app.js", include_in_schema=False)
 def serve_js():
     return FileResponse(os.path.join(frontend_dir, "app.js"), media_type="application/javascript")
-
-
-if os.path.exists(frontend_dir):
-    app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
 
 
 if __name__ == "__main__":
