@@ -102,6 +102,8 @@ def chat(
             chat_history=history,
         )
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         print(f"[Chat] RAG error: {type(e).__name__}: {e}")
         from fastapi import HTTPException
         raise HTTPException(status_code=500, detail=f"Chat failed: {str(e)}")

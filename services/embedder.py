@@ -108,19 +108,22 @@ def add_document(user_id: int, doc_id: int, text: str, metadata: Dict[str, Any])
     return vector
 
 
-def query_documents(user_id: int, query_text: str, top_k: int = 5) -> List[Dict[str, Any]]:
+def query_documents(user_id: int, query_text: str = None, top_k: int = 5, *, query: str = None, n_results: int = None, **kwargs) -> List[Dict[str, Any]]:
     """
     Semantic search: returns top_k matching document chunks.
     Attempts ChromaDB query first, falling back to pure Python SQLite vector similarity.
+    Accepts both query_text= and query= for backward compatibility.
     """
-    query_vector = embed_text(query_text, task_type="retrieval_query")
+    actual_query = query_text or query or ""
+    actual_top_k = n_results or top_k or 5
+    query_vector = embed_text(actual_query, task_type="retrieval_query")
     coll = _user_collection(user_id)
 
     if coll:
         try:
             results = coll.query(
                 query_embeddings=[query_vector],
-                n_results=top_k,
+                n_results=actual_top_k,
             )
             hits = []
             if results and results.get("ids") and results["ids"][0]:
@@ -164,7 +167,7 @@ def query_documents(user_id: int, query_text: str, top_k: int = 5) -> List[Dict[
                     },
                 })
         scored.sort(key=lambda x: x["score"], reverse=True)
-        return scored[:top_k]
+        return scored[:actual_top_k]
     finally:
         db.close()
 
