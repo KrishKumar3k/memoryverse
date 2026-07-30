@@ -19,7 +19,6 @@ except ImportError:
 # ─── CLIENTS ──────────────────────────────────────────────────────────────────
 EMBED_MODELS = [
     "models/text-embedding-004",
-    "text-embedding-004",
 ]
 default_chroma_dir = "/tmp/chroma_db" if os.getenv("VERCEL") else "./chroma_db"
 CHROMA_DIR = os.getenv("CHROMA_DIR", default_chroma_dir)
@@ -72,7 +71,7 @@ def embed_text(text: str, task_type: str = "retrieval_document") -> List[float]:
     """Generate a Gemini embedding vector for the given text."""
     api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
     if not api_key:
-        raise ValueError("GEMINI_API_KEY environment variable is not set on Vercel/server.")
+        raise ValueError("GEMINI_API_KEY environment variable is not configured in Vercel settings.")
     os.environ["GOOGLE_API_KEY"] = api_key
     os.environ["GEMINI_API_KEY"] = api_key
     genai.configure(api_key=api_key)
@@ -88,9 +87,10 @@ def embed_text(text: str, task_type: str = "retrieval_document") -> List[float]:
             )
             return result["embedding"]
         except Exception as e:
+            print(f"[Embedder] Model {model_name} failed: {type(e).__name__}: {e}")
             last_err = e
             continue
-    raise RuntimeError(f"Embedding generation failed: {last_err}")
+    raise RuntimeError(f"Embedding failed ({type(last_err).__name__}): {last_err}")
 
 
 def add_document(user_id: int, doc_id: int, text: str, metadata: Dict[str, Any]) -> List[float]:
