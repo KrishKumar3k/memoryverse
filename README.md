@@ -171,17 +171,6 @@ memoryverse/
 
 ---
 
-## 🎯 Evaluation Alignment
-
-| Criterion | Implementation |
-|---|---|
-| AI Organization (40%) | GPT-4o-mini auto-categorizes every upload into 6 categories with skill extraction |
-| AI/ML Techniques (25%) | Gemini embeddings (text-embedding-004), ChromaDB vector DB, RAG pipeline, Gemini Flash knowledge graph, NLP entity extraction |
-| Innovation & UX (20%) | Force-directed knowledge graph, animated timeline, conversational search, glassmorphism UI |
-| Architecture Clarity (15%) | This README + modular code structure + full security documentation |
-
----
-
 ## 👤 Author
 
-Built for MemoryVerse AI '26 Challenge.
+Built for MemoryVerse AI '26 Challenge by Krish Kumar.
