@@ -10,7 +10,7 @@ import google.generativeai as genai
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-CANDIDATE_MODELS = ["gemini-flash-latest", "gemini-3.6-flash", "gemini-2.0-flash"]
+CANDIDATE_MODELS = ["gemini-flash-latest", "gemini-flash-lite-latest"]
 
 SYSTEM_PROMPT = """You are an AI that maps relationships between a student's documents.
 Given a list of documents (with id, category, title, skills), identify a few clear, non-redundant connections.

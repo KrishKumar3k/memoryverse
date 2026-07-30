@@ -22,6 +22,7 @@ EMBED_MODELS = [
     "models/gemini-embedding-2",
     "models/gemini-embedding-2-preview",
 ]
+_chroma_client = None
 default_chroma_dir = "/tmp/chroma_db" if os.getenv("VERCEL") else "./chroma_db"
 CHROMA_DIR = os.getenv("CHROMA_DIR", default_chroma_dir)
 

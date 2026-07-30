@@ -10,7 +10,7 @@ import google.generativeai as genai
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-CANDIDATE_MODELS = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"]
+CANDIDATE_MODELS = ["gemini-flash-latest", "gemini-flash-lite-latest"]
 CATEGORIES = ["Certificate", "Resume", "Project", "Internship", "Achievement", "Academic", "Other"]
 
 SYSTEM_PROMPT = """You are an expert document classifier for a student portfolio system.
